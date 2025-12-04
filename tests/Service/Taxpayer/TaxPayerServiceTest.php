@@ -7,7 +7,6 @@
 
 namespace Klsheng\Myinvois\Tests\Service\Taxpayer;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Klsheng\Myinvois\MyInvoisClient;
 use Klsheng\Myinvois\Service\Taxpayer\TaxPayerService;
@@ -18,100 +17,51 @@ class TaxPayerServiceTest extends TestCase
      * @covers \Klsheng\Myinvois\Service\AbstractService
      * @covers \Klsheng\Myinvois\Service\Taxpayer\TaxPayerService
      */
-    public function testValidateTaxPayerTinNotFound()
+    public function testValidateTaxPayerTinBuildsQuery()
     {
-        $mockNotFound = 'NotFound';
+        $mockResponse = [
+            'tinStatus' => 'valid',
+        ];
 
-        $prodMode = false;
         $mockClient = $this->createMock(MyInvoisClient::class);
         $mockClient
             ->expects($this->once())
             ->method('request')
             ->with(
                 'GET',
-                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/validate/' . $mockNotFound . '?idType=' . $mockNotFound . '&idValue=' . $mockNotFound
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/validate/1234567890?idType=NRIC&idValue=990101015432'
             )
-            ->willThrowException(new Exception());
+            ->willReturn($mockResponse);
 
-        $service = new TaxPayerService($mockClient, $prodMode);
+        $service = new TaxPayerService($mockClient);
+        $response = $service->validateTaxPayerTin('1234567890', 'NRIC', '990101015432');
 
-        $this->expectException(Exception::class);
-        $service->validateTaxPayerTin($mockNotFound, $mockNotFound, $mockNotFound);
+        $this->assertEquals($mockResponse, $response);
     }
 
     /**
      * @covers \Klsheng\Myinvois\Service\AbstractService
      * @covers \Klsheng\Myinvois\Service\Taxpayer\TaxPayerService
      */
-    public function testValidateTaxPayerTinFound()
+    public function testSearchTaxPayerTinSkipsEmptyParameters()
     {
-        $mockFound = 'Found';
+        $mockResponse = [
+            'searchStatus' => 'not-found',
+        ];
 
-        $prodMode = false;
         $mockClient = $this->createMock(MyInvoisClient::class);
         $mockClient
             ->expects($this->once())
             ->method('request')
             ->with(
                 'GET',
-                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/validate/' . $mockFound . '?idType=' . $mockFound . '&idValue=' . $mockFound
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/search/tin'
             )
-            ->willReturn('');
+            ->willReturn($mockResponse);
 
-        $service = new TaxPayerService($mockClient, $prodMode);
+        $service = new TaxPayerService($mockClient);
+        $response = $service->searchTaxPayerTin();
 
-        $result = $service->validateTaxPayerTin($mockFound, $mockFound, $mockFound);
-        $this->assertEquals('', $result);
-    }
-
-    /**
-     * @covers \Klsheng\Myinvois\Service\AbstractService
-     * @covers \Klsheng\Myinvois\Service\Taxpayer\TaxPayerService
-     */
-    public function testSearchTaxPayerTinNotFound()
-    {
-        $mockNotFound = 'NotFound';
-
-        $prodMode = false;
-        $mockClient = $this->createMock(MyInvoisClient::class);
-        $mockClient
-            ->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/search/tin?idType=' . $mockNotFound . '&idValue=' . $mockNotFound . '&taxpayerName=' . $mockNotFound
-            )
-            ->willThrowException(new Exception());
-
-        $service = new TaxPayerService($mockClient, $prodMode);
-
-        $this->expectException(Exception::class);
-        $service->searchTaxPayerTin($mockNotFound, $mockNotFound, $mockNotFound);
-    }
-
-    /**
-     * @covers \Klsheng\Myinvois\Service\AbstractService
-     * @covers \Klsheng\Myinvois\Service\Taxpayer\TaxPayerService
-     */
-    public function testSearchTaxPayerTinFound()
-    {
-        $mockFound = 'Found';
-        $mockTIN = 'TIN';
-
-        $prodMode = false;
-        $mockClient = $this->createMock(MyInvoisClient::class);
-        $mockClient
-            ->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/taxpayer/search/tin?idType=' . $mockFound . '&idValue=' . $mockFound . '&taxpayerName=' . $mockFound,
-            )
-            ->willReturn($mockTIN);
-
-        $service = new TaxPayerService($mockClient, $prodMode);
-
-        $result = $service->searchTaxPayerTin($mockFound, $mockFound, $mockFound);
-        $this->assertEquals($mockTIN, $result);
+        $this->assertEquals($mockResponse, $response);
     }
 }

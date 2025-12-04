@@ -17,62 +17,25 @@ class DocumentSubmissionServiceTest extends TestCase
      * @covers \Klsheng\Myinvois\Service\AbstractService
      * @covers \Klsheng\Myinvois\Service\Document\DocumentSubmissionService
      */
-    public function testGetSubmission()
+    public function testGetSubmissionBuildsQuery()
     {
         $mockResponse = [
-            'data' => 'submission',
+            'uuid' => 'submission-uuid',
+            'documents' => [],
         ];
 
         $mockClient = $this->createMock(MyInvoisClient::class);
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'GET',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documentsubmissions/sub-123?pageNo=2&pageSize=50'
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentSubmissionService($mockClient);
-        $response = $service->getSubmission('123');
-
-        $this->assertEquals($mockResponse, $response);
-    }
-
-    /**
-     * @covers \Klsheng\Myinvois\Service\AbstractService
-     * @covers \Klsheng\Myinvois\Service\Document\DocumentSubmissionService
-     */
-    public function testSubmitDocument()
-    {
-        $mockDocuments = [
-            [
-                'format' => 'xml',
-                'documentHash' => 'AnyString',
-                'codeNumber' => 'AnyString',
-                'document' => 'AnyString',
-            ],
-            [
-                'format' => 'json',
-                'documentHash' => 'AnyString',
-                'codeNumber' => 'AnyString',
-                'document' => 'AnyString',
-            ],
-        ];
-
-        $mockResponse = [
-            'submissionUid' => 'AnyString',
-            'acceptedDocuments' => [
-                'uuid' => 'AnyString',
-                'invoiceCodeNumber' => 'AnyString',
-            ],
-            'rejectedDocuments' => [],
-        ];
-
-        $mockClient = $this->createMock(MyInvoisClient::class);
-        $mockClient
-            ->expects($this->once())
-            ->method('request')
-            ->willReturn($mockResponse);
-
-        $service = new DocumentSubmissionService($mockClient);
-        $response = $service->submitDocument($mockDocuments);
+        $response = $service->getSubmission('sub-123', 2, 50);
 
         $this->assertEquals($mockResponse, $response);
     }

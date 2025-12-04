@@ -50,9 +50,7 @@ class DocumentSubmissionService extends AbstractService
             'pageNo' => $pageNo,
             'pageSize' => $pageSize,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/' . $id . $query;
+        $url = $this->getBaseUrl() . '/' . $id . $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         return $response;

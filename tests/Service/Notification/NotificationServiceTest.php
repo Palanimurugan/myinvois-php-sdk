@@ -50,7 +50,7 @@ class NotificationServiceTest extends TestCase
             ->method('request')
             ->with(
                 'GET',
-                $this->anything()
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/notifications/taxpayer?pageNo=1&pageSize=20'
             )
             ->willReturn($mockNotificationResponse);
 

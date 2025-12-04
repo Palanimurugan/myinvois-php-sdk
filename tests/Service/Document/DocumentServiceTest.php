@@ -28,6 +28,11 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'PUT',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/state/123/state',
+                $this->anything()
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
@@ -51,6 +56,11 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'PUT',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/state/123/state',
+                $this->anything()
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
@@ -75,6 +85,10 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'GET',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/123/raw'
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
@@ -99,6 +113,10 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'GET',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/123/details'
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
@@ -136,6 +154,10 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'GET',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/recent?pageNo=1&pageSize=20'
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
@@ -169,6 +191,10 @@ class DocumentServiceTest extends TestCase
         $mockClient
             ->expects($this->once())
             ->method('request')
+            ->with(
+                'GET',
+                'https://preprod-api.myinvois.hasil.gov.my/api/v1.0/documents/search?pageNo=1&pageSize=100'
+            )
             ->willReturn($mockResponse);
 
         $service = new DocumentService($mockClient);
