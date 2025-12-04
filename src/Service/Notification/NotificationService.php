@@ -64,9 +64,7 @@ class NotificationService extends AbstractService
             'pageNo' => $pageNo,
             'pageSize' => $pageSize,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/taxpayer' . $query;
+        $url = $this->getBaseUrl() . '/taxpayer' . $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         return $response;

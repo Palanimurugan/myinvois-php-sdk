@@ -51,9 +51,7 @@ class TaxPayerService extends AbstractService
             'idType' => $idType,
             'idValue' => $idValue,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/validate/' . $tin . $query;
+        $url = $this->getBaseUrl() . '/validate/' . $tin . $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         // When it is valid, the gateway return empty with statusCode 200
@@ -83,9 +81,7 @@ class TaxPayerService extends AbstractService
             'idValue' => $idValue,
             'taxpayerName' => $taxPayerName,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/search/tin' .  $query;
+        $url = $this->getBaseUrl() . '/search/tin' .  $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         return $response;

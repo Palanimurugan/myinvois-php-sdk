@@ -59,4 +59,28 @@ abstract class AbstractService
     {
         return $this->client;
     }
+
+    /**
+     * Build a query string while omitting empty optional parameters.
+     *
+     * @param array $params
+     *
+     * @return string
+     */
+    protected function buildQuery(array $params = [])
+    {
+        $filteredParams = array_filter($params, function ($value) {
+            if (is_string($value)) {
+                return $value !== '';
+            }
+
+            return $value !== null;
+        });
+
+        if (empty($filteredParams)) {
+            return '';
+        }
+
+        return '?' . http_build_query($filteredParams);
+    }
 }

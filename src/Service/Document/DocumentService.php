@@ -161,9 +161,7 @@ class DocumentService extends AbstractService
             'issuerIdType' => $issuerIdType,
             'issuerTin' => $issuerTin,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/recent' . $query;
+        $url = $this->getBaseUrl() . '/recent' . $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         return $response;
@@ -209,9 +207,7 @@ class DocumentService extends AbstractService
             'documentType' => $documentType,
             'searchQuery' => $searchQuery,
         ];
-        $query = '?' . http_build_query($params);
-
-        $url = $this->getBaseUrl() . '/search' . $query;
+        $url = $this->getBaseUrl() . '/search' . $this->buildQuery($params);
 
         $response = $this->getClient()->request('GET', $url);
         return $response;
